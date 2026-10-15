@@ -1,0 +1,430 @@
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>M'man trô-fê | Restaurant</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #fffaf0;
+      color: #34251d;
+    }
+
+    header {
+      text-align: center;
+      padding: 25px 15px;
+      background: white;
+      border-bottom: 3px solid #e98232;
+    }
+
+    .logo {
+      width: 85px;
+      height: 85px;
+      margin: auto;
+      border-radius: 50%;
+      background: #e98232;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 42px;
+      border: 4px solid #ffe0b7;
+    }
+
+    header h1 {
+      margin: 10px 0 5px;
+      color: #d96820;
+      font-style: italic;
+    }
+
+    header p {
+      margin: 5px;
+      color: #765b49;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 14px 8px;
+      background: #fff0dd;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      text-decoration: none;
+      color: #713914;
+      font-weight: bold;
+      padding: 8px;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 30px 15px;
+      background: #fbe4c8;
+    }
+
+    .hero h2 {
+      color: #a84c16;
+      margin-top: 0;
+    }
+
+    .section {
+      padding: 25px 15px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .section h2 {
+      text-align: center;
+      color: #c45b1e;
+    }
+
+    .plats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 18px;
+    }
+
+    .carte {
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 3px 12px #00000012;
+    }
+
+    .carte img {
+      width: 100%;
+      height: 165px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .details {
+      padding: 14px;
+    }
+
+    .details h3 {
+      margin: 0 0 8px;
+    }
+
+    .prix {
+      color: #c45b1e;
+      font-weight: bold;
+      font-size: 18px;
+    }
+
+    button {
+      background: #df7028;
+      color: white;
+      border: none;
+      border-radius: 7px;
+      padding: 11px 14px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #b95116;
+    }
+
+    .panier-ligne {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 0;
+      border-bottom: 1px solid #ead8c8;
+    }
+
+    .quantite {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .quantite button {
+      padding: 6px 10px;
+    }
+
+    .total {
+      font-size: 21px;
+      font-weight: bold;
+      margin: 20px 0;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0;
+      border: 1px solid #d8c3b1;
+      border-radius: 7px;
+      font: inherit;
+    }
+
+    .commande {
+      width: 100%;
+      margin-top: 10px;
+    }
+
+    footer {
+      background: #40291c;
+      color: white;
+      text-align: center;
+      padding: 25px 15px;
+      line-height: 1.7;
+    }
+
+    footer a {
+      color: #ffd09e;
+    }
+  </style>
+</head>
+
+<body>
+
+  <header id="accueil">
+    <div class="logo">🍲</div>
+    <h1>M'man trô-fê</h1>
+    <p>Le goût authentique de chez nous ❤️</p>
+  </header>
+
+  <nav>
+    <a href="#accueil">Accueil</a>
+    <a href="#menu">Menu</a>
+    <a href="#panier">🛒 Panier (<span id="nombre">0</span>)</a>
+    <a href="#contact">Contact</a>
+  </nav>
+
+  <section class="hero">
+    <h2>Bienvenue chez M'man trô-fê !</h2>
+    <p>Découvrez nos délicieux plats traditionnels ivoiriens.</p>
+    <p>Des plats savoureux à prix accessible.</p>
+    <a href="#menu"><button>Découvrir le menu</button></a>
+  </section>
+
+  <main>
+    <section class="section" id="menu">
+      <h2>🍛 Notre menu</h2>
+      <p style="text-align:center">
+        Chaque plat est à <strong>1 000 FCFA</strong>.
+      </p>
+
+      <div class="plats" id="liste-plats"></div>
+    </section>
+
+    <section class="section" id="panier">
+      <h2>🛒 Mon panier</h2>
+
+      <div id="contenu-panier">
+        Votre panier est vide.
+      </div>
+
+      <p class="total">
+        Total : <span id="total">0</span> FCFA
+      </p>
+
+      <h3>Informations de commande</h3>
+      <input id="client" placeholder="Votre nom" autocomplete="name">
+      <input id="telephone" type="tel"
+        placeholder="Votre numéro de téléphone">
+      <textarea id="adresse" rows="2"
+        placeholder="Votre adresse de livraison ou de retrait"></textarea>
+
+      <button class="commande" onclick="commander()">
+        Commander sur WhatsApp
+      </button>
+    </section>
+  </main>
+
+  <footer id="contact">
+    <h3>M'man trô-fê</h3>
+    <p>📍 Yopougon Ananeraie, derrière la pharmacie Alicia</p>
+    <p>🕗 Du lundi au vendredi : 8h à 19h</p>
+    <p>📱 Contact et commandes sur WhatsApp</p>
+    <p>© 2026 M'man trô-fê</p>
+  </footer>
+
+  <script>
+    // Remplace ce numéro par le WhatsApp du restaurant.
+    // Format : indicatif du pays + numéro, sans le signe +.
+    const WHATSAPP = "225XXXXXXXXXX";
+
+    const plats = [
+      {
+        nom: "Placali sauce graine",
+        image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        nom: "Placali sauce gombo",
+        image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        nom: "Riz sauce aubergine",
+        image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        nom: "Riz sauce graine",
+        image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        nom: "Riz sauce arachide",
+        image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        nom: "Riz sauce djoungblé",
+        image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        nom: "Foutou sauce graine",
+        image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        nom: "Foutou sauce arachide",
+        image: "https://images.unsplash.com/photo-1547592180-85f173990554?auto=format&fit=crop&w=600&q=80"
+      },
+      {
+        nom: "Spécialité du vendredi : Tchêpe",
+        image: "https://images.unsplash.com/photo-1512058564366-18510be2db19?auto=format&fit=crop&w=600&q=80"
+      }
+    ];
+
+    const panier = {};
+
+    // Afficher les plats
+    const liste = document.getElementById("liste-plats");
+
+    plats.forEach((plat, index) => {
+      liste.innerHTML += `
+        <article class="carte">
+          <img src="${plat.image}"
+            alt="${plat.nom}"
+            loading="lazy">
+          <div class="details">
+            <h3>${plat.nom}</h3>
+            <p class="prix">1 000 FCFA</p>
+            <button onclick="ajouter(${index})">
+              + Ajouter au panier
+            </button>
+          </div>
+        </article>
+      `;
+    });
+
+    // Ajouter un plat
+    function ajouter(index) {
+      if (panier[index]) {
+        panier[index]++;
+      } else {
+        panier[index] = 1;
+      }
+
+      afficherPanier();
+    }
+
+    // Modifier la quantité
+    function modifier(index, changement) {
+      panier[index] += changement;
+
+      if (panier[index] <= 0) {
+        delete panier[index];
+      }
+
+      afficherPanier();
+    }
+
+    // Actualiser le panier et le total
+    function afficherPanier() {
+      const contenu = document.getElementById("contenu-panier");
+      let total = 0;
+      let nombre = 0;
+      contenu.innerHTML = "";
+
+      for (const index in panier) {
+        const quantite = panier[index];
+        const montant = quantite * 1000;
+
+        total += montant;
+        nombre += quantite;
+
+        contenu.innerHTML += `
+          <div class="panier-ligne">
+            <div>
+              <strong>${plats[index].nom}</strong><br>
+              ${montant.toLocaleString("fr-FR")} FCFA
+            </div>
+            <div class="quantite">
+              <button onclick="modifier(${index}, -1)">−</button>
+              <span>${quantite}</span>
+              <button onclick="modifier(${index}, 1)">+</button>
+            </div>
+          </div>
+        `;
+      }
+
+      if (nombre === 0) {
+        contenu.textContent = "Votre panier est vide.";
+      }
+
+      document.getElementById("total").textContent =
+        total.toLocaleString("fr-FR");
+
+      document.getElementById("nombre").textContent = nombre;
+    }
+
+    // Envoyer la commande sur WhatsApp
+    function commander() {
+      const client = document.getElementById("client").value.trim();
+      const telephone = document.getElementById("telephone").value.trim();
+      const adresse = document.getElementById("adresse").value.trim();
+
+      if (Object.keys(panier).length === 0) {
+        alert("Ajoutez au moins un plat au panier.");
+        return;
+      }
+
+      if (!client || !telephone || !adresse) {
+        alert("Veuillez remplir vos coordonnées.");
+        return;
+      }
+
+      if (WHATSAPP.includes("X")) {
+        alert("Ajoutez d'abord le numéro WhatsApp du restaurant dans le code.");
+        return;
+      }
+
+      let message = "Bonjour M'man trô-fê ! Je souhaite commander :\n\n";
+      let total = 0;
+
+      for (const index in panier) {
+        const quantite = panier[index];
+        const montant = quantite * 1000;
+
+        message += plats[index].nom + " x " + quantite
+          + " = " + montant + " FCFA\n";
+
+        total += montant;
+      }
+
+      message += "\nTotal : " + total + " FCFA";
+      message += "\nNom : " + client;
+      message += "\nTéléphone : " + telephone;
+      message += "\nAdresse : " + adresse;
+
+      const url = "https://wa.me/" + WHATSAPP
+        + "?text=" + encodeURIComponent(message);
+
+      window.open(url, "_blank");
+    }
+  </script>
+
+</body>
+</html>
